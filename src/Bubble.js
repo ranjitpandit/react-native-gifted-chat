@@ -19,6 +19,7 @@ export default class Bubble extends React.Component {
   constructor(props) {
     super(props);
     this.onLongPress = this.onLongPress.bind(this);
+    this.detectDoubleTap = this.detectDoubleTap.bind(this);
   }
 
   handleBubbleToNext() {
@@ -118,12 +119,26 @@ export default class Bubble extends React.Component {
     }
   }
 
+  detectDoubleTap () {
+    const now = new Date().getTime()
+    if (this.lastTap && (now - this.lastTap) < 300) {
+      delete this.lastTap
+      if (this.props.onDoubleTap) {
+        this.props.onDoubleTap(this.context, this.props.currentMessage);
+      }
+    }
+    else {
+      this.lastTap = now
+    }
+  }
+
   render() {
     return (
       <View style={[styles[this.props.position].container, this.props.containerStyle[this.props.position]]}>
         <View style={[styles[this.props.position].wrapper, this.props.wrapperStyle[this.props.position], this.handleBubbleToNext(), this.handleBubbleToPrevious()]}>
           <TouchableWithoutFeedback
             onLongPress={this.onLongPress}
+            onPress={this.props.onDoubleTap? this.detectDoubleTap:null}
             accessibilityTraits="text"
             {...this.props.touchableProps}
           >
@@ -204,6 +219,7 @@ Bubble.contextTypes = {
 Bubble.defaultProps = {
   touchableProps: {},
   onLongPress: null,
+  onDoubleTap: null,
   renderMessageImage: null,
   renderMessageText: null,
   renderCustomView: null,
@@ -230,6 +246,7 @@ Bubble.defaultProps = {
 Bubble.propTypes = {
   touchableProps: PropTypes.object,
   onLongPress: PropTypes.func,
+  onDoubleTap: PropTypes.func,
   renderMessageImage: PropTypes.func,
   renderMessageText: PropTypes.func,
   renderCustomView: PropTypes.func,
