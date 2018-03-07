@@ -301,6 +301,12 @@ class GiftedChat extends React.Component {
     });
   }
 
+  scrollTo(options) {
+      if (this._messageContainerRef) {
+          this._messageContainerRef.scrollTo(options);
+      }
+  }
+
   renderMessages() {
     const AnimatedView = this.props.isAnimated === true ? Animated.View : View;
     return (
