@@ -147,6 +147,10 @@ export default class MessageContainer extends React.Component {
       ? {}
       : styles.notInvertedContentContainerStyle;
 
+    if (this.props.inverted && this.props.topOffset) {
+      contentContainerStyle.paddingBottom = this.props.topOffset
+    }
+
     return (
       <View style={styles.container}>
         <ListView
